@@ -1,0 +1,6 @@
+﻿namespace NN;
+
+class Layer
+{
+
+}
