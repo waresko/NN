@@ -69,7 +69,5 @@ public class NeuronNet
 
         this.layers = layers;
         MemoryDepth = memory_depth;
-
     }
-
 }
