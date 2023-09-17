@@ -1,109 +1,28 @@
-﻿using System;
+﻿
+int[] m = new int[] { 1, 2, 3, 44, 5, 6 };
+int cursor = 1;
 
-Operation op = (int a, int b) =>
-    {
-        Console.WriteLine("Call a + b {0}, {1}", a, b);
-        return a + b;
-    };
+// 44,5,1,2,3.
 
-int sum = op(10, 20);
-Console.WriteLine("Call op = {0}", sum);
-
-op = (int a, int b) =>
+for (int idx = 0; idx < m.Length; idx++)
 {
-    Console.WriteLine("Call a - b {0}, {1}", a, b);
-    return a - b;
-};
-sum = op(10, 20);
-Console.WriteLine("Call op = {0}", sum);
-
-op = MyClass.Sum;
-sum = op(11, 21);
-Console.WriteLine("Call op = {0}", sum);
-
-
-op = MyClass.Sub;
-sum = op(11, 21);
-Console.WriteLine("Call op = {0}", sum);
-
-MyClass mc = new() 
-{ 
-    Type = OperationType.Sub
-};
-
-op = mc.Op;
-sum = op(11, 21);
-Console.WriteLine("Call op = {0}", sum);
-
-mc.Type = OperationType.Div;
-sum = op(11, 21);
-Console.WriteLine("Call op = {0}", sum);
-
-delegate int Operation(int a, int b);
-
-public enum OperationType
-{
-    Sum,
-    Sub,
-    Mult,
-    Div
+    int i = (idx + cursor) % m.Length;
+    //if (i >= m.Length)
+    //{
+    //    i -= m.Length;
+    //}
+    WriteLine(m[i]);
 }
-public class MyClass
-{
-    public OperationType Type { get; set; }
 
-    public static int Sum(int x, int y)
-    {
-        Console.WriteLine($"{x} + {y} = {x + y}");
-        return x + y;
-    }
-    public static int Sub(int x, int y)
-    {
-        Console.WriteLine($"{x} - {y} = {x - y}");
-        return x - y;
-    }
+Console.WriteLine("Цикл закончился");
 
 
-    public int Op(int x, int y)
-    {
-        switch (Type)
-        {
-            case OperationType.Sum:
-                Console.WriteLine($"{x} + {y} = {x + y}");
-                return x + y;
-            case OperationType.Sub:
-                Console.WriteLine($"{x} - {y} = {x - y}");
-                return x - y;
-            case OperationType.Mult:
-                Console.WriteLine($"{x} * {y} = {x * y}");
-                return x * y;
-            case OperationType.Div:
-                Console.WriteLine($"{x} / {y} = {x / y}");
-                return x / y;
-        }
-        throw new Exception();
-    }
-}
-public interface IMyInterface
-{
-    int DoSomething(double g, string v)
-    {
-        return -1;
-    }
-}
-public class MyClass2 : MyAbstractClass, IMyInterface
-{
-    public int DoSomething(double g, string v)
-    {
-        return 0;
-    }
-}
-public struct MyStruct : IMyInterface
-{   
 
-}
-public abstract class MyAbstractClass
-{
-    int id = 0;
-    protected abstract void Print();
-}
+// 1 : idx = 0
+// 2 : idx < m.Length
+// 3 : { ... }
+// 4 : idx++
+// 5 : idx < m.Length
+// 6 : { ... }
+// 7 : idx++
+// 8 : ... до тех пор пока idx < m.Length

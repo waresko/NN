@@ -5,69 +5,64 @@ namespace NN;
 public class NeuronNet
 {
     public static NeuronNet Null { get; } = new NeuronNet();
-    
-    int[] layers = Array.Empty<int>();
 
-    public IReadOnlyList<Sensor> Sensors { get; private set; }
-    public IReadOnlyList<Motor> Motors { get; private set; }
-
+    public Sensors Sensors { get; private set; }
+    public Motors Motors { get; private set; }
     public IReadOnlyList<Neuron> Neurons { get; private set; }
 
-    public int MemoryDepth{ get; private set; }
+    public int MemoryDepth { get; private set; }
+    public IReadOnlyList<StatePlane> StatePlanes { get; private set; }
 
     public NeuronNet()
     {
-       Sensors = Array.Empty<Sensor>();
-       Motors = Array.Empty<Motor>();
-       Neurons = Array.Empty<Neuron>();
+        Sensors = new(this);
+        Motors = new(this);
+        Neurons = Array.Empty<Neuron>();
+        StatePlanes = Array.Empty<StatePlane>();
     }
 
     public void Init(int memory_depth, params int[] layers)
-    {              
+    {
         if (layers is null)
             throw new ArgumentNullException(nameof(layers));
 
         if (layers.Length < 2)
             throw new ArgumentException("Number of layers must be greater than 2");
 
-        if (layers.Any(l => l < 1)) 
-            throw new ArgumentException("Layer size must be greater than 1");
+        if (layers.Any(width => width < 1))
+            throw new ArgumentException("Layer width must be greater than 1");
 
         if (memory_depth <= 0)
             memory_depth = 1;
 
-        int nof_sensors = layers[0];
-        int nof_motors = layers[layers.Length -1];
-        int nof_neurons = layers.Sum();
-        
-        var sensors = new Sensor[nof_sensors];
-        var motors = new Motor[nof_motors];
+        int nof_neurons = layers.Skip(1).Sum();
+        int nof_state_planes = layers.Length;
+
         var neurons = new Neuron[nof_neurons];
-        
-        var idx = 0;  // Index of neurons
+        var state_planes = new StatePlane[nof_state_planes];
 
-        for (int i = 0; i < nof_sensors; i++, idx++)
-        {
-            neurons[idx] = new(idx, 0);
-            sensors[i] = new(neurons[idx]);          
-        }
-        
-        for (int idx_max = nof_neurons - nof_motors; idx < idx_max; idx++)
-        {
-            neurons[idx] = new(idx, 1);
-        }
+        int idx = 0;
 
-        for (int i = 0; i < nof_motors; i++, idx++)
+        for (int idx_layer = 0; idx_layer < layers.Length; idx_layer++)
         {
-            neurons[idx] = new(idx, layers.Length - 1);
-            motors[i] = new(neurons[idx]);
+            var width = layers[idx_layer];
+            state_planes[idx_layer] = new(memory_depth, width);
+            if (0 == idx_layer)
+            {
+                continue;
+            }
+            var input = state_planes[idx_layer - 1];
+            var output = state_planes[idx_layer];
+            for (int i = 0, i_max = layers[idx_layer]; i < i_max; ++i, ++idx)
+            {
+                neurons[idx] = new(memory_depth, input, output, i);
+            }
         }
-        
-        Sensors = sensors;
-        Motors = motors;
+        Sensors = new(this, state_planes[0]);
+        Motors = new(this, state_planes[state_planes.Length - 1]);
         Neurons = neurons;
 
-        this.layers = layers;
+        StatePlanes = state_planes;
         MemoryDepth = memory_depth;
     }
 }

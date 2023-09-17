@@ -1,6 +1,0 @@
-﻿namespace NN;
-
-class Layer
-{
-
-}
