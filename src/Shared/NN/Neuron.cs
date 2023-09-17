@@ -2,12 +2,17 @@
 
 public class Neuron
 {
-    public int Id { get; }
-    public int Layer { get; }
+    public StatePlane Input { get; }
+    public StatePlane Output { get; }
+    public int Pos { get; }
 
-    internal Neuron(int id, int layer)
+    internal NeuronModel Model;
+    
+    internal Neuron(int memory_depth, StatePlane input, StatePlane output, int pos)
     {
-        Id = id;
-        Layer = layer;
+        Pos = pos;
+        Output = output;
+        Input = input;
+        Model = new(memory_depth, input.Width);
     }
 }
