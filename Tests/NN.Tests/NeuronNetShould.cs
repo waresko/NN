@@ -17,4 +17,22 @@ public class NeuronNetShould
         Assert.Equal(10, nn.Motors.Count);
         Assert.Equal(110, nn.Neurons.Count);
     }
+    [Fact]
+    public void RunOk()
+    {
+        nn.Init(10, 10, 10);
+        for (int i = 0, i_max = nn.Sensors.Count; i < i_max; i++)
+        {
+            nn.Sensors[i] = 1;
+        }
+        for (int i = 0, i_max = nn.Sensors.Count; i < i_max; i++)
+        {
+            Assert.Equal(1, nn.Sensors[i]);
+        }
+        nn.Run();
+        for (int i = 0, i_max = nn.Motors.Count; i < i_max; i++)
+        {
+            Assert.Equal(0, nn.Motors[i]);
+        }
+    }
 }

@@ -11,7 +11,7 @@ public class NeuronNet
     public IReadOnlyList<Neuron> Neurons { get; private set; }
 
     public int MemoryDepth { get; private set; }
-    public IReadOnlyList<StatePlane> StatePlanes { get; private set; }
+    internal IReadOnlyList<StatePlane> StatePlanes { get; private set; }
 
     public NeuronNet()
     {
@@ -64,5 +64,13 @@ public class NeuronNet
 
         StatePlanes = state_planes;
         MemoryDepth = memory_depth;
+    }
+    public void Run()
+    {
+        for (int i = 0, i_max = Neurons.Count; i < i_max; ++i)
+        {
+            var neuron = Neurons[i];
+            neuron.Run();
+        }
     }
 }

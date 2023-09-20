@@ -8,10 +8,7 @@ public class Sensors
     public float this[int pos]
     {
         get => StatePlane[pos];
-        set
-        {
-            StatePlane[pos] = value;
-        }
+        set => StatePlane [pos] = value;
     }
     internal Sensors(NeuronNet neuron_net)
     {

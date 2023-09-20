@@ -1,28 +1,20 @@
-﻿
-int[] m = new int[] { 1, 2, 3, 44, 5, 6 };
-int cursor = 1;
-
-// 44,5,1,2,3.
-
-for (int idx = 0; idx < m.Length; idx++)
+﻿var state = new State();
+var model = new Model();
+var product = state * model;
+public class State
 {
-    int i = (idx + cursor) % m.Length;
-    //if (i >= m.Length)
-    //{
-    //    i -= m.Length;
-    //}
-    WriteLine(m[i]);
+    float GetProduct(Model model)
+    {
+        return Value * model.Value;
+    }
+    public static float operator * (State state, Model model)
+    {
+        return state.GetProduct(model);
+    }
+    public float Value { get; set; }
 }
 
-Console.WriteLine("Цикл закончился");
-
-
-
-// 1 : idx = 0
-// 2 : idx < m.Length
-// 3 : { ... }
-// 4 : idx++
-// 5 : idx < m.Length
-// 6 : { ... }
-// 7 : idx++
-// 8 : ... до тех пор пока idx < m.Length
+public class Model
+{
+    public float Value { get; set; }
+}
